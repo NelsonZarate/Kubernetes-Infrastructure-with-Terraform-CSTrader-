@@ -22,6 +22,8 @@ resource "kubernetes_deployment_v1" "api" {
           name              = "cstrader"
           image             = "cstrader:latest"
           image_pull_policy = "Never"
+          command = ["/bin/sh", "-c"]
+          args    = ["cd /app && poetry run uvicorn backend.src.main:app --host 0.0.0.0 --port 8000"]
 
           port {
             container_port = 8000

@@ -1,5 +1,3 @@
-# --- Service da Database ---
-# Permite que a API encontre a DB pelo nome "database"
 resource "kubernetes_service_v1" "database" {
   metadata {
     name      = "database"
@@ -13,7 +11,7 @@ resource "kubernetes_service_v1" "database" {
       port        = 5432
       target_port = 5432
     }
-    type = "ClusterIP" # Acessível apenas dentro do cluster
+    type = "ClusterIP"
   }
 }
 

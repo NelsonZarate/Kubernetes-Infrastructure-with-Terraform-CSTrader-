@@ -28,7 +28,14 @@ resource "kubernetes_stateful_set_v1" "database" {
             name           = "postgres"
           }
 
-          # Injeção de variáveis via Secret
+          readiness_probe {
+            exec {
+              command = ["psql", "-w","-U", "user", "-d","db","-c", "SELECT 1"]
+            }
+            period_seconds = 10
+            timeout_seconds = 5
+            failure_threshold = 3
+          }
           env {
             name = "POSTGRES_USER"
             value_from {

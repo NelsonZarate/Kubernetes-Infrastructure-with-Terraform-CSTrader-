@@ -26,7 +26,7 @@ resource "kubernetes_job_v1" "db_setup" {
           command = [
             "sh", 
             "-c", 
-            "until nc -z database 5432; do echo 'Waiting for Postgres...'; sleep 2; done;"
+            "until nc -z database-0 5432; do echo 'Waiting for Postgres...'; sleep 2; done;"          
           ]
         }
 
@@ -48,9 +48,8 @@ resource "kubernetes_job_v1" "db_setup" {
           command = ["/bin/sh", "-c"]
           args = [
             <<-EOT
-              cd /app/backend &&
               echo "🚀 Starting Migrations..." &&
-              poetry run alembic upgrade head &&
+              poetry run alembic -c backend/alembic.ini upgrade head
               
               echo "🌱 Seeding Admin User..." &&
               poetry run python src/initialize_admin.py &&
