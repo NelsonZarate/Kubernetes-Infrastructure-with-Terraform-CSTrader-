@@ -54,9 +54,6 @@ resource "kubernetes_job_v1" "db_setup" {
               echo "🚀 Starting Migrations..." &&
               poetry run alembic -c backend/alembic.ini upgrade head
 
-              echo "🌱 Seeding Admin User..." &&
-              poetry run python backend/src/initialize_admin.py &&
-
               echo "✅ All Done!"
             EOT
           ]
