@@ -6,7 +6,7 @@ resource "kubernetes_job_v1" "db_setup" {
 
   spec {
     backoff_limit = 4 
-    
+
     ttl_seconds_after_finished = 100 
 
     template {
@@ -22,18 +22,18 @@ resource "kubernetes_job_v1" "db_setup" {
         init_container {
           name  = "wait-for-postgres"
           image = "busybox" 
-          
+
           command = [
             "sh", 
             "-c", 
-            "until nc -z database-0 5432; do echo 'Waiting for Postgres...'; sleep 2; done;"          
+            "until nc -z database-0.database.app 5432; do echo 'Waiting for Postgres...'; sleep 2; done;"
           ]
         }
 
         container {
           name              = "migrator"
           image             = "cstrader:latest" 
-          image_pull_policy = "Never"          
+          image_pull_policy = "Never"
 
           env_from {
             secret_ref {
@@ -45,14 +45,17 @@ resource "kubernetes_job_v1" "db_setup" {
             value = "/app"
           }
 
+          working_dir = "/app"
+
           command = ["/bin/sh", "-c"]
           args = [
             <<-EOT
+              cd /app &&
               echo "🚀 Starting Migrations..." &&
               poetry run alembic -c backend/alembic.ini upgrade head
-              
+
               echo "🌱 Seeding Admin User..." &&
-              poetry run python src/initialize_admin.py &&
+              poetry run python backend/src/initialize_admin.py &&
 
               echo "✅ All Done!"
             EOT
