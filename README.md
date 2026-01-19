@@ -26,11 +26,7 @@ The previous exercise used Kubernetes YAML manifests applied with `kubectl`, alo
 
 1. Ensure Minikube, Docker, and Terraform are installed.
 2. Navigate to `infra/` directory.
-3. Run `terraform init`.
-4. Run `terraform plan -var-file env.tfvars`.
-5. Run `terraform apply -var-file env.tfvars`.
-6. Update `/etc/hosts` with the cluster IP for `cstrader.local`.
-7. Access the app at `https://cstrader.local`.
+3. Run `make start_terraform`.
 
 ## How to destroy the environment
 
@@ -44,4 +40,5 @@ This will remove the cluster and all deployed resources.
 - Designed for local development with Minikube; not production-ready.
 - Self-signed TLS certificates (ignore browser warnings).
 - Single environment; scaling to multiple clients/environments would require further modularization.
+
 - Docker builds are done locally; in CI/CD, use registries.
